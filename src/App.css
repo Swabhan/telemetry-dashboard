@@ -1,38 +1,162 @@
+/* General styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f7fa;
+}
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  background: linear-gradient(to bottom, #dedede, #fcfcfc);
   min-height: 100vh;
+  padding-top: 100px;
+}
+
+/* Navigation Bar */
+.NavBar {
+  background-color: #003f91; /* Modern darker NASA Blue */
+  color: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 15px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.Nav-logo {
+  font-size: 1.75rem;
+  font-weight: bold;
+  letter-spacing: 1px;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.Nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.Nav-links li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.Nav-links li a:hover {
+  text-decoration: underline;
+}
+
+/* Last Updated */
+.Last-updated {
+  font-size: 0.9rem;
+  margin: 20px 0;
+  color: #555;
+}
+
+/* Update Interval Dropdown */
+.Update-interval {
+  margin-bottom: 20px;
+}
+
+.Update-interval label {
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.Update-interval select {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.Update-interval select:focus {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Card grid */
+.Card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  padding: 40px;
+  justify-items: center;
+}
+
+.Card {
+  background-color: white;
+  border: 1px solid #ececec;
+  border-radius: 15px;
+  padding: 20px;
+  color: #333;
+  width: 220px;
+  height: 220px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.Card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.Card h3 {
+  margin: 0;
+  font-size: 1.2rem; /* Adjusted for better scaling */
+  color: #003f91;
+}
+
+.Card p {
+  font-size: 1.2rem; /* Adjusted for better scaling */
+  margin: 15px 0 0;
+  font-weight: bold;
+  color: #111;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .Nav-logo {
+    font-size: 1.3rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .Nav-links li a {
+    font-size: 0.9rem;
+  }
+
+  .Card {
+    width: 180px;
+    height: 180px;
+  }
+
+  .Card h3 {
+    font-size: 1rem; /* Adjusted for better scaling */
+  }
+
+  .Card p {
+    font-size: 1rem; /* Adjusted for better scaling */
   }
 }
+
+@media (max-width: 480px) {
+  .Card {
+    width: 100%; /* Make cards full width on smaller screens */
+    height: auto; /* Allow height to adjust based on content */
+  }
+}
+
+.Change {
+  font-size: 0.8em;
+  color: gray;
+}
+
