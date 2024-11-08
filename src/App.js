@@ -111,7 +111,7 @@ function App() {
               key={i}
               className={"timeline-item" + (item.active ? " active" : "")}
               onClick={() => click(i)}
-              title={`Timestamp: ${item.name}`}
+              title={`Timestamp: ${item.name}`} 
             >
             </div>
           ))}
