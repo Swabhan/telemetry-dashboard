@@ -179,13 +179,11 @@ body, html {
   color: gray;
 }
 
-
-
 .timeline {
   margin: 60px;
   height: 5px;
   background-color: #ccc;
-
+  position: relative;
 }
 
 .timeline-progress {
@@ -193,28 +191,30 @@ body, html {
   height: 100%;
   background-color: red;
 }
+
 .timeline-items {
-  margin-left: -5px;
-  margin-right: -5px;
-  margin-top: -12px;
+  margin-top: -10px;
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 
 .timeline-item {
   position: relative;
-}
-.timeline-item::before {
-  content: " ";
-  width: 20px;
-  height: 20px;
+  width: 2px; /* Adjust the width of the bar */
+  height: 30px; /* Adjust the height of the bar */
   background-color: #ccc;
-  display: block;
-  border-radius: 100%;
+  transition: background-color 0.3s;
 }
+
+.timeline-item:hover,
+.timeline-item.active {
+  background-color: red; /* Highlight on hover or when active */
+}
+
 .timeline-contain {
   position: absolute;
-  top: -37px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #ddd;
@@ -222,6 +222,16 @@ body, html {
   padding: 5px 10px;
   border-radius: 15px;
   text-align: center;
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateY(10px); /* Start slightly below */
+  pointer-events: none;
+}
+
+.timeline-item:hover .timeline-contain,
+.timeline-item.active .timeline-contain {
+  opacity: 1; /* Show label on hover or active */
+  transform: translateY(0); /* Slide up */
 }
 
 .timeline-contain::before {
@@ -231,18 +241,12 @@ body, html {
   background-color: #ddd;
   display: block;
   position: absolute;
-  top: 18px;
-  margin-left: -2px;
+  top: 20px;
   left: 50%;
   transform: rotate(-45deg) translateX(-50%);
 }
-.timeline-item.active::before {
-  background-color: red;
-}
-.timeline-item.active .timeline-contain {
-  color: #fff;
-  background-color: red;
-}
-.timeline-item.active .timeline-contain::before {
+
+.timeline-item.active .timeline-contain::before,
+.timeline-item:hover .timeline-contain::before {
   background-color: red;
 }

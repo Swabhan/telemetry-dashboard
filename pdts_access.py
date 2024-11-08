@@ -3,6 +3,17 @@ import json
 from flask import Flask, jsonify
 from flask_cors import CORS
 
+import streamlitTest as st
+import pandas as pd
+import matplotlib.pyplot as plt
+
+st.title("Line Plot Example")
+data = pd.DataFrame({
+    "x": [1, 2, 3, 4],                # Load sample data
+    "y": [10, 20, 30, 40]})
+plt.plot(data["x"], data["y"])         # Plot the data
+st.pyplot()     
+
 app = Flask(__name__)
 CORS(app)
 
