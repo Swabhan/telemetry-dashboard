@@ -80,7 +80,6 @@ body, html {
 .Update-interval select:focus {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
-
 /* Responsive Card grid */
 .Card-grid {
   display: grid;
@@ -91,6 +90,7 @@ body, html {
 }
 
 .Card {
+  position: relative; /* Set relative position to contain absolute child elements */
   background-color: white;
   border: 1px solid #ececec;
   border-radius: 15px;
@@ -113,16 +113,35 @@ body, html {
 
 .Card h3 {
   margin: 0;
-  font-size: 1.2rem; /* Adjusted for better scaling */
+  font-size: clamp(1rem, 1.2vw, 1.2rem); /* Dynamically scale font size between 1rem and 1.2rem */
   color: #003f91;
+  white-space: nowrap; /* Prevents wrapping to a new line */
+  overflow: hidden; /* Ensures overflow content is hidden */
+  text-overflow: ellipsis; /* Adds an ellipsis (…) if the text overflows */
+  width: 100%; /* Ensures it takes the full width of the card */
+  text-align: center; /* Centers the text horizontally */
 }
 
 .Card p {
-  font-size: 1.2rem; /* Adjusted for better scaling */
+  font-size: 1.2rem;
   margin: 15px 0 0;
   font-weight: bold;
   color: #111;
 }
+
+/* Change indicator at the bottom-right */
+.ChangeFromLast {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: green; /* Default color, can override inline */
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Spacing for arrow */
+}
+
 
 /* Media Queries */
 @media (max-width: 768px) {
@@ -160,3 +179,70 @@ body, html {
   color: gray;
 }
 
+
+
+.timeline {
+  margin: 60px;
+  height: 5px;
+  background-color: #ccc;
+
+}
+
+.timeline-progress {
+  width: 33%;
+  height: 100%;
+  background-color: red;
+}
+.timeline-items {
+  margin-left: -5px;
+  margin-right: -5px;
+  margin-top: -12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.timeline-item {
+  position: relative;
+}
+.timeline-item::before {
+  content: " ";
+  width: 20px;
+  height: 20px;
+  background-color: #ccc;
+  display: block;
+  border-radius: 100%;
+}
+.timeline-contain {
+  position: absolute;
+  top: -37px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ddd;
+  width: 100px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.timeline-contain::before {
+  content: " ";
+  width: 10px;
+  height: 10px;
+  background-color: #ddd;
+  display: block;
+  position: absolute;
+  top: 18px;
+  margin-left: -2px;
+  left: 50%;
+  transform: rotate(-45deg) translateX(-50%);
+}
+.timeline-item.active::before {
+  background-color: red;
+}
+.timeline-item.active .timeline-contain {
+  color: #fff;
+  background-color: red;
+}
+.timeline-item.active .timeline-contain::before {
+  background-color: red;
+}

@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+// var Timeline = [];
+
+const Timeline = [];
+
 function App() {
   //Allows previous data features
   const [previousTelemetryData, setPreviousTelemetryData] = useState({}); 
   const [initialTelemetryData, setInitialTelemetryData] = useState({});
+
+  //Timeline
+  const [timeline, setTimeline] = useState(Timeline);
+  const [totalItems, setTotalItems] = useState(timeline.length);
+  const [numberOfActiveItems, setActiveItems] = useState(timeline.filter(o => o.active).length);
+  const [progressBarWidth, setWidth] = useState(totalItems > 1 && numberOfActiveItems > 0  ? ((numberOfActiveItems - 1) / (totalItems - 1)) * 100 : 0);
+  
 
   //Time of data capture
   const [lastUpdated, setLastUpdated] = useState('');
@@ -12,7 +23,6 @@ function App() {
 
   //To hold latest data
   const [telemetryData, setTelemetryData] = useState({});
-  
 
   // Function to fetch telemetry data from the server
   const fetchTelemetryData = async () => {
@@ -28,18 +38,32 @@ function App() {
         setInitialTelemetryData(data);
       }
 
-      // Update previous data to current before setting new data
-      setPreviousTelemetryData(telemetryData);
+      // // Update previous data to current before setting new data
+      setTelemetryData(prevData => {
+        setPreviousTelemetryData(prevData);
+        return data;
+      });
 
-      //Set new data
-      setTelemetryData(data);
-
+      //Update Timeline
       setLastUpdated(new Date().toLocaleString());
+      
+      // Update timeline using the state setter
+      setTimeline(prevTimeline => {
+        if (prevTimeline.length < 120) {
+          const newTimeline = [...prevTimeline, { name: data["timestamp"], data: data }];
+          setTotalItems(newTimeline.length);
+          setActiveItems(newTimeline.filter(o => o.active).length);
+          return newTimeline;
+        }
+        return prevTimeline;
+      });
+      
 
     } catch (error) {
       console.error('Error fetching telemetry data:', error);
     }
   };
+
 
   useEffect(() => {
     //Initial data fetch
@@ -48,6 +72,7 @@ function App() {
     //Updats when intervalTime's value has passed in second
     const intervalId = setInterval(() => {
       fetchTelemetryData();
+
     }, intervalTime * 1000);
 
     //When unmounts
@@ -55,6 +80,10 @@ function App() {
   }, [intervalTime]); //Rerun when intervalTime changes
 
   const sortedKeys = Object.keys(telemetryData).sort();
+
+  function click(i){
+    console.log(timeline[i]);
+  }
 
   return (
     <div className="App">
@@ -67,10 +96,29 @@ function App() {
         </ul>
       </nav>
 
+    
+      <div className="timeline">
+        <div
+          className="timeline-progress"
+          style={{ width: `${progressBarWidth}%` }}
+        />
+        <div className="timeline-items">
+          {timeline.map((item, i) => (
+            <div
+              key={i}
+              className={"timeline-item" + (item.active ? " active" : "")}
+              onClick={() => click(i)}
+            >
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Last Updated */}
       <div className="Last-updated">
         Last Updated: {lastUpdated}
       </div>
+
 
       {/* Update Interval Dropdown */}
       <div className="Update-interval">
@@ -90,34 +138,49 @@ function App() {
       </div>
 
       {/* Card Grid */}
-      <header className="App-header">
-        <div className="Card-grid">
-          {sortedKeys.map((key) => {
-            const currentValue = telemetryData[key];
-            const previousValue = previousTelemetryData[key];
-            const initialValue = initialTelemetryData[key];
+    <header className="App-header">
+      <div className="Card-grid">
+        {sortedKeys.map((key) => {
+          const currentValue = telemetryData[key];
+          const previousValue = previousTelemetryData[key];
+          const initialValue = initialTelemetryData[key];
 
-            const changeFromLast = previousValue !== undefined
-              ? (currentValue - previousValue).toFixed(2)
-              : 'N/A'; 
+          const changeFromLast = previousValue !== undefined
+            ? (currentValue - previousValue).toFixed(2)
+            : 'N/A';
 
-            const changeFromStart = initialValue !== undefined
-              ? (currentValue - initialValue).toFixed(2)
-              : 'N/A';
+          const changeFromStart = initialValue !== undefined
+            ? (currentValue - initialValue).toFixed(2)
+            : 'N/A';
 
-            return (
-              <div key={key} className="Card">
-                <h3>{key}</h3>
-                <p>{currentValue}</p>
-                
-                <p className="ChangeFromStart" style={{ fontSize: '0.8em', color: 'blue' }}>
-                  Change from Start: {changeFromStart}
+          // Determine arrow direction, color, and visibility for changeFromLast
+          const isPositiveChange = changeFromLast > 0;
+          const isNeutralChange = changeFromLast === "0.00";
+          const changeColor = isPositiveChange ? 'green' : 'red';
+          const arrow = isPositiveChange ? '↑' : '↓';
+
+          return (
+            <div key={key} className="Card">
+              <h3>{key}</h3>
+              <p>{currentValue.toFixed(4)}</p>
+
+              {/* Change From Last Indicator (only if non-neutral) */}
+              {!isNeutralChange && changeFromLast !== 'N/A' && (
+                <p
+                  className="ChangeFromLast"
+                  style={{
+                    color: changeColor,
+                  }}
+                >
+                  {arrow} {changeFromLast}
                 </p>
-              </div>
-            );
-          })}
-        </div>
-      </header>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </header>
+
     </div>
   );
 }
