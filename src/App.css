@@ -201,15 +201,15 @@ body, html {
 
 .timeline-item {
   position: relative;
-  width: 2px; /* Adjust the width of the bar */
-  height: 30px; /* Adjust the height of the bar */
+  width: 2px;
+  height: 30px;
   background-color: #ccc;
   transition: background-color 0.3s;
 }
 
 .timeline-item:hover,
 .timeline-item.active {
-  background-color: red; /* Highlight on hover or when active */
+  background-color: red;
 }
 
 .timeline-contain {
@@ -222,16 +222,16 @@ body, html {
   padding: 5px 10px;
   border-radius: 15px;
   text-align: center;
-  opacity: 0; /* Initially hidden */
+  opacity: 0;
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  transform: translateY(10px); /* Start slightly below */
+  transform: translateY(10px);
   pointer-events: none;
 }
 
 .timeline-item:hover .timeline-contain,
 .timeline-item.active .timeline-contain {
-  opacity: 1; /* Show label on hover or active */
-  transform: translateY(0); /* Slide up */
+  opacity: 1; 
+  transform: translateY(0); 
 }
 
 .timeline-contain::before {

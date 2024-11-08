@@ -4,18 +4,24 @@ import './App.css';
 const Timeline = [];
 
 function App() {
+  //Telemetry change data
   const [previousTelemetryData, setPreviousTelemetryData] = useState({}); 
   const [initialTelemetryData, setInitialTelemetryData] = useState({});
+
+  //Timeline
   const [timeline, setTimeline] = useState(Timeline);
   const [totalItems, setTotalItems] = useState(timeline.length);
   const [numberOfActiveItems, setActiveItems] = useState(timeline.filter(o => o.active).length);
   const [progressBarWidth, setWidth] = useState(totalItems > 1 && numberOfActiveItems > 0 ? ((numberOfActiveItems - 1) / (totalItems - 1)) * 100 : 0);
+  
+  //Data Consumption
   const [lastUpdated, setLastUpdated] = useState('');
   const [intervalTime, setIntervalTime] = useState(5);
   const [telemetryData, setTelemetryData] = useState({});
   const [isPastMode, setIsPastMode] = useState(false);
 
   const fetchTelemetryData = async () => {
+    //Fetch data from local API
     try {
       const response = await fetch('http://127.0.0.1:2000/telemetry');
       if (!response.ok) {
@@ -23,16 +29,19 @@ function App() {
       }
       const data = await response.json();
 
+      //Set initial data if no data set
       if (Object.keys(initialTelemetryData).length === 0) {
         setInitialTelemetryData(data);
       }
 
       if (!isPastMode) {
+        //Set current and previous telem data
         setTelemetryData(prevData => {
           setPreviousTelemetryData(prevData);
           return data;
         });
 
+        //Update timeline
         setTimeline(prevTimeline => {
           if (prevTimeline.length < 200) {
             const newTimeline = [...prevTimeline, { name: data["timestamp"], data: data }];
@@ -48,6 +57,7 @@ function App() {
         });
       }
 
+      //Change Time
       setLastUpdated(new Date().toLocaleString());
       
     } catch (error) {
@@ -56,7 +66,10 @@ function App() {
   };
 
   useEffect(() => {
+    //Initial
     fetchTelemetryData();
+
+    //Updates on interval
     const intervalId = setInterval(() => {
       fetchTelemetryData();
     }, intervalTime * 1000);
@@ -66,11 +79,13 @@ function App() {
 
   const sortedKeys = Object.keys(telemetryData).sort();
 
+  //Allows past data via timeline functionality
   function click(i) {
     setIsPastMode(true);
     setTelemetryData(timeline[i].data);
   }
 
+  //Resets to normal
   function goBackToLive() {
     setIsPastMode(false);
   }
@@ -96,7 +111,7 @@ function App() {
               key={i}
               className={"timeline-item" + (item.active ? " active" : "")}
               onClick={() => click(i)}
-              title={`Timestamp: ${item.name}`}  // This is the tooltip showing the timestamp
+              title={`Timestamp: ${item.name}`}
             >
             </div>
           ))}
